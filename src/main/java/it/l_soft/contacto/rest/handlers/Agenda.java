@@ -2,10 +2,11 @@ package it.l_soft.contacto.rest.handlers;
 
 import java.util.ArrayList;
 
+import javax.json.JsonObject;
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
@@ -14,13 +15,15 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
-import it.l_soft.contacto.dbUtils.Companies;
 import it.l_soft.contacto.dbUtils.DBConnection;
+import it.l_soft.contacto.dbUtils.Events;
 import it.l_soft.contacto.rest.ApplicationProperties;
+import it.l_soft.contacto.utils.JavaJSONMapper;
 import it.l_soft.contacto.utils.Utils;
 
-@Path("/referenceData")
-public class ReferenceData {
+
+@Path("/agenda")
+public class Agenda {
 	@Context
 	private ServletContext context;
 	
@@ -31,26 +34,29 @@ public class ReferenceData {
 	
 	DBConnection conn = null;
 	
-	@GET
-	@Path("/customers")
+	@POST
+	@Path("/schedule")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getCustomers(@HeaderParam("Language") String language)
+	public Response getCustomers(String body, @HeaderParam("Language") String language)
 	{
 		prop.setLanguageId(language);
 		DBConnection conn;
-		ArrayList<Companies> customers = null;
+		ArrayList<Events> events = new ArrayList<Events>();
+		JsonObject jsonIn = JavaJSONMapper.StringToJSON(body);
+		int numOfFutureItems = jsonIn.getInt("numOfFutureItems", 0);
+		int idOwner = jsonIn.getInt("idOwner", 0);
+		
 		try {
 			conn = new DBConnection();
-			new Companies();
-			customers = Companies.getAllCustomers(conn);
+			events = Events.getFutureEventsByOwner(conn, idOwner, numOfFutureItems);
 		} 
 		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return Utils.jsonizeSingleObject(customers);
+		return Utils.jsonizeSingleObject(events);
 	}
 
 }

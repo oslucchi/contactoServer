@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -250,7 +251,8 @@ public class Utils {
 
 	public static Response jsonizeSingleObject(Object o, int languageId)
 	{
-		Gson mapper = new Gson();
+//		Gson mapper = new Gson();
+		Gson mapper = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
 		String json = "";
 		
 		json = mapper.toJson(o);

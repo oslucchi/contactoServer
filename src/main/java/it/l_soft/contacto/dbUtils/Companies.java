@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-public class Customers extends DBInterface {	
+public class Companies extends DBInterface {	
 	private static final long serialVersionUID = -7615245450418546503L;
 
-	protected int idCustomer;
+	protected int idCompany;
 	protected int idSegment;
 	protected String description;
 	protected boolean status;
@@ -16,11 +16,11 @@ public class Customers extends DBInterface {
 	
 	private void setNames()
 	{
-		tableName = "Customers";
-		idColName = "idCustomer";
+		tableName = "Companies";
+		idColName = "idCompany";
 	}
 
-	public Customers()
+	public Companies()
 	{
 		setNames();
 	}
@@ -35,20 +35,20 @@ public class Customers extends DBInterface {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Customers> getAllCustomers(DBConnection conn) throws Exception {
-		Logger log = Logger.getLogger(Customers.class);
+	public static ArrayList<Companies> getAllCustomers(DBConnection conn) throws Exception {
+		Logger log = Logger.getLogger(Companies.class);
 		String sql = "SELECT * " +
-					 "FROM Customers";
+					 "FROM Companies";
 		log.trace("Querying: " + sql);
-		return (ArrayList<Customers>) DBInterface.populateCollection(conn, sql, Customers.class);
+		return (ArrayList<Companies>) DBInterface.populateCollection(conn, sql, Companies.class);
 	}
 
-	public int getIdCustomer() {
-		return idCustomer;
+	public int getIdCompany() {
+		return idCompany;
 	}
 
-	public void setIdCustomer(int idCustomer) {
-		this.idCustomer = idCustomer;
+	public void setIdCustomer(int idCompany) {
+		this.idCompany = idCompany;
 	}
 
 	public int getIdSegment() {
