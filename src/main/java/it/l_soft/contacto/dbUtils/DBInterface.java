@@ -22,7 +22,8 @@ import it.l_soft.contacto.utils.Utils;
 
 public class DBInterface implements Serializable
 {
-	static final long serialVersionUID = 1;
+	private static final long serialVersionUID = -2837386949309331147L;
+
 	static final Logger log = Logger.getLogger(DBInterface.class);
 
 	protected String tableName = "";

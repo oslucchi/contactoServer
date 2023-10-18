@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import it.l_soft.contacto.dbUtils.DBConnection;
 import it.l_soft.contacto.dbUtils.Events;
+import it.l_soft.contacto.dbUtils.Reports;
 import it.l_soft.contacto.rest.ApplicationProperties;
 import it.l_soft.contacto.utils.JavaJSONMapper;
 import it.l_soft.contacto.utils.Utils;
@@ -55,8 +56,31 @@ public class Agenda {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return Utils.jsonizeSingleObject(events);
 	}
 
+	@POST
+	@Path("/getReports")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response getReports(String body, @HeaderParam("Language") String language)
+	{
+		prop.setLanguageId(language);
+		DBConnection conn;
+		ArrayList<Reports> reports= new ArrayList<Reports>();
+		JsonObject jsonIn = JavaJSONMapper.StringToJSON(body);
+		int idCompany = jsonIn.getInt("idCompany", 0);
+		
+		try {
+			conn = new DBConnection();
+			reports = Reports.getAllActiveReportsForCompanyId(conn, idCompany);
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return Utils.jsonizeSingleObject(reports);
+	}
 }

@@ -10,10 +10,13 @@ public class Events extends DBInterface {
 	protected int idEvent;
 	protected int idOwner;
 	protected int idCompany;
+	protected int idEventCategory;
 	protected Date date;
 	protected int duration;
-	protected String company;
 	protected String description;
+
+	protected String company;
+	protected String iconName;
 	protected ArrayList<Persons> participants;
 
 	protected boolean status;
@@ -33,9 +36,11 @@ public class Events extends DBInterface {
 
 	public static ArrayList<Events> getFutureEventsByOwner(DBConnection conn, int idOwner, int limit) throws Exception
 	{
-		String sql = "SELECT a.*, b.description as company " +
+		String sql = "SELECT a.*, b.description as company, c.iconName " +
 					 "FROM Events a LEFT JOIN Companies b ON (" +
 					 "       a.idCompany = b.idCompany " +
+					 "     ) LEFT OUTER JOIN EventCategories c ON ( " +
+					 "       a.idEventCategory = c.idEventCategory " +
 					 "     ) " +
 					 "WHERE idOwner = " + idOwner + " AND " + 
 					 "      date >= CURDATE() " + 
@@ -45,7 +50,11 @@ public class Events extends DBInterface {
 		ArrayList<Events> events = (ArrayList<Events>) DBInterface.populateCollection(conn, sql, Events.class);
 		for(Events event : events)
 		{
-			event.setParticipants(EventParticipants.getPersonsParticipatingToEvent(conn, event.getIdEvent()));		
+			event.setParticipants(EventParticipants.getPersonsParticipatingToEvent(conn, event.getIdEvent()));
+			if (event.getIconName() == null)
+			{
+				event.setIconName("iconaBianca.png");
+			}
 		}
 		return events;
 	}
@@ -112,5 +121,21 @@ public class Events extends DBInterface {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public int getIdEventCategory() {
+		return idEventCategory;
+	}
+
+	public void setIdEventCategory(int idEventCategory) {
+		this.idEventCategory = idEventCategory;
+	}
+
+	public String getIconName() {
+		return iconName;
+	}
+
+	public void setIconName(String iconName) {
+		this.iconName = iconName;
 	}
 }
