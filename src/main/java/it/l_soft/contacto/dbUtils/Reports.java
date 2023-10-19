@@ -7,12 +7,16 @@ public class Reports extends DBInterface {
 	private static final long serialVersionUID = 8673712835807537226L;
 	
 	protected int idReport;
+	protected int idReporter;
 	protected int idEvent;
 	protected int idCompany;
-	protected int idAgent;
 	protected Date date;
 	protected String report;
+	protected String summary;
 	protected boolean archived;
+	
+	protected String reporter;
+	protected String company;
 	
 	protected boolean status;
 	
@@ -28,9 +32,57 @@ public class Reports extends DBInterface {
 	static public ArrayList<Reports> getAllActiveReportsForCompanyId(DBConnection conn, int idCompany) 
 				throws Exception
 	{
-		String sql = "SELECT * FROM Reports " +
+		String sql = "SELECT a.*, CONCAT(b.firstName, ' ', b.familyName) as reporter " +
+					 "FROM Reports a INNER JOIN Persons b ON ( " +
+					 "       a.idReporter = b.idPerson " +
+					 "     ) " +
 					 "WHERE idCompany = " + idCompany + " AND " +
-					 "      archived = 0";
+					 "      archived = 0 " +
+					 "ORDER BY date DESC";
 		return (ArrayList<Reports>) DBInterface.populateCollection(conn, sql, Reports.class);
+	}
+
+	public int getIdReport() {
+		return idReport;
+	}
+
+	public int getIdReporter() {
+		return idReporter;
+	}
+
+	public int getIdEvent() {
+		return idEvent;
+	}
+
+	public int getIdCompany() {
+		return idCompany;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public String getReport() {
+		return report;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public String getReporter() {
+		return reporter;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 }
